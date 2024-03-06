@@ -1,0 +1,20 @@
+---
+app:
+  user:
+    email: dev-user@tm.io
+    password: secret
+
+spring:
+  datasource:
+    url: "jdbc:h2:mem:dev;DB_CLOSE_DELAY=-1;LOCK_MODE=0"
+#    password: sa
+#    url: jdbc:postgresql://localhost:5433/postgres?user=postgres&password=secret
+    driver-class-name: org.h2.Driver
+#    driver-class-name: org.postgresql.Driver
+  output:
+    ansi:
+      enabled: always
+
+logging:
+  level:
+    root: INFO
