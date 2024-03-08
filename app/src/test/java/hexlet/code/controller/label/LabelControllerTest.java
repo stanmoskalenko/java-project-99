@@ -86,8 +86,15 @@ class LabelControllerTest extends TestUtils {
 
         @Test
         void getUserWithoutTokenTest() throws Exception {
-            mockMvc.perform(MockMvcRequestBuilders.get("/api/task_statuses/1"))
+            mockMvc.perform(MockMvcRequestBuilders.get("/api/labels/1"))
                     .andExpect(status().isUnauthorized());
+        }
+
+        @Test
+        void getNonExistentUserWithoutTokenTest() throws Exception {
+            mockMvc.perform(MockMvcRequestBuilders.get("/api/task_statuses/9999")
+                            .with(token))
+                    .andExpect(status().isNotFound());
         }
     }
 

@@ -40,6 +40,24 @@ public class UserUtils {
     }
 
     /**
+     * Checks if the user with the specified ID is the current authenticated user.
+     * This method retrieves the email of the current authenticated user from the security context
+     * and compares it with the email of the user identified by the given ID.
+     * If the emails match, it returns true, indicating that the specified user is the current user.
+     * If there is no user with the given ID, or the emails do not match, it returns false.
+     *
+     * @param id the ID of the user to check against the current authenticated user
+     * @return true if the user with the given ID is the current authenticated user, false otherwise
+     */
+    public boolean isCurrentUser(Long id) {
+        var currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        var userEmail = repository.findById(id).map(User::getEmail).orElse(null);
+        System.out.println("currentUserEmail => " + currentUserEmail);
+        System.out.println("userEmail => " + userEmail);
+        return currentUserEmail.equals(userEmail);
+    }
+
+    /**
      * Retrieves the test user from the repository using the email provided in the application properties.
      * If the test user is not found in the repository, a UserNotFoundException is thrown.
      *

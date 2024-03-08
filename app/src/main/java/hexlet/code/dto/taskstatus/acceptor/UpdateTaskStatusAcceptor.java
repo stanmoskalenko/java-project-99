@@ -1,11 +1,17 @@
 package hexlet.code.dto.taskstatus.acceptor;
 
 import jakarta.validation.constraints.Size;
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.io.Serializable;
 
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class UpdateTaskStatusAcceptor implements Serializable {
 
     private static final int MIN_LEN = 1;

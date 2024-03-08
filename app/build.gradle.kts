@@ -14,7 +14,7 @@ plugins {
 group = "hexlet.code"
 version = "0.0.1-SNAPSHOT"
 repositories.mavenCentral()
-//java.sourceCompatibility = JavaVersion.VERSION_20
+application.mainClass
 
 configurations {
     compileOnly {
@@ -22,25 +22,23 @@ configurations {
     }
 }
 
-application.mainClass
-
-tasks.test {
-    useJUnitPlatform()
-    reports.enabled
-    testLogging.exceptionFormat = TestExceptionFormat.FULL
-    testlogger {
-        setTheme(ThemeType.MOCHA)
-        showSummary = true
-        showSkipped = true
-        showFailed = true
-        showPassed = true
+tasks {
+    jacocoTestReport {
+        reports.xml.required = true
+    }
+    test {
+        useJUnitPlatform()
+        reports.enabled
+        testLogging.exceptionFormat = TestExceptionFormat.FULL
+        testlogger {
+            setTheme(ThemeType.MOCHA)
+            showSummary = true
+            showSkipped = true
+            showFailed = true
+            showPassed = true
+        }
     }
 }
-
-tasks.jacocoTestReport {
-    reports.xml.required = true
-}
-
 
 dependencies {
     implementation("org.springframework:spring-webmvc:6.1.4")
@@ -55,6 +53,8 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
 
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-api:2.3.0")
+    implementation("org.webjars:swagger-ui:4.8.1")
 
     implementation("org.apache.commons:commons-lang3:3.14.0")
     implementation("org.openapitools:jackson-databind-nullable:0.2.6")
@@ -65,7 +65,6 @@ dependencies {
     implementation("com.fasterxml.jackson.core:jackson-core:2.16.1")
     annotationProcessor("org.mapstruct:mapstruct-processor:1.5.5.Final")
     implementation("net.datafaker:datafaker:2.1.0")
-    implementation("org.webjars:swagger-ui:4.8.1")
 
     compileOnly("org.projectlombok:lombok:1.18.30")
     annotationProcessor("org.projectlombok:lombok:1.18.30")

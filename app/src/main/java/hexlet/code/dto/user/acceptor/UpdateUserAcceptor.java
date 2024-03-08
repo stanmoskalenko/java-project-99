@@ -13,7 +13,6 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = true)
 public class UpdateUserAcceptor extends BaseUserAcceptor {
 
-    private long id;
     @Email
     private String email;
     @Size(min = MIN_LEN, message = "The password must be more than 2 characters!")

@@ -41,7 +41,7 @@ class UserControllerTest extends TestUtils {
 
         @Test
         void getListWithTokenTest() throws Exception {
-            var body = mockMvc.perform(MockMvcRequestBuilders.get("/api/users")
+            var body = mockMvc.perform(MockMvcRequestBuilders.get(SLUG)
                             .with(token))
                     .andExpect(status().isOk())
                     .andExpect(header().exists("X-Total-Count"))
@@ -54,7 +54,7 @@ class UserControllerTest extends TestUtils {
 
         @Test
         void getListWithoutTokenTest() throws Exception {
-            mockMvc.perform(MockMvcRequestBuilders.get("/api/users"))
+            mockMvc.perform(MockMvcRequestBuilders.get(SLUG))
                     .andExpect(status().isUnauthorized());
         }
     }
@@ -136,13 +136,14 @@ class UserControllerTest extends TestUtils {
     @Nested
     class UpdateUserTest {
 
-        private UpdateUserAcceptor getAcceptor() {
-            var testUser = Instancio.of(generator.getUserModel()).create();
-            repository.save(testUser);
+        private User getUser() {
+            return repository.findByEmail(testUserEmail).get();
+        }
 
+        private UpdateUserAcceptor getAcceptor() {
             var acceptor = new UpdateUserAcceptor();
-            acceptor.setId(testUser.getId());
-            acceptor.setPassword(faker.internet().password());
+            acceptor.setFirstName(faker.name().firstName());
+            acceptor.setLastName(faker.name().lastName());
 
             return acceptor;
         }
@@ -150,7 +151,8 @@ class UserControllerTest extends TestUtils {
         @Test
         void updateUserWithTokenTest() throws Exception {
             var acceptor = getAcceptor();
-            var endpoint = SLUG + "/" + acceptor.getId();
+            var userId = getUser().getId();
+            var endpoint = SLUG + "/" + userId;
             var body = mockMvc.perform(MockMvcRequestBuilders.put(endpoint)
                             .with(token)
                             .contentType(MediaType.APPLICATION_JSON)
@@ -160,7 +162,8 @@ class UserControllerTest extends TestUtils {
                     .getResponse()
                     .getContentAsString();
 
-            var actual = repository.findById(acceptor.getId()).get();
+            var actual = repository.findById(userId).get();
+            System.out.println("bodu => " + body);
             assertThatJson(body).and(
                     v -> v.node("id").isNotNull(),
                     v -> v.node("createdAt").isNotNull(),
@@ -172,12 +175,28 @@ class UserControllerTest extends TestUtils {
 
         @Test
         void updateUserWithoutTokenTest() throws Exception {
+            var userId = getUser().getId();
             var acceptor = getAcceptor();
-            var endpoint = SLUG + "/" + acceptor.getId();
-            mockMvc.perform(MockMvcRequestBuilders.get(endpoint)
+
+            var endpoint = SLUG + "/" + userId;
+            mockMvc.perform(MockMvcRequestBuilders.put(endpoint)
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(om.writeValueAsString(acceptor)))
                     .andExpect(status().isUnauthorized());
+        }
+
+        @Test
+        void updateAnotherUserTest() throws Exception {
+            var anotherUser = Instancio.of(generator.getUserModel()).create();
+            var acceptor = new UpdateUserAcceptor();
+            acceptor.setFirstName(faker.name().firstName());
+
+            var endpoint = SLUG + "/" + anotherUser.getId();
+            mockMvc.perform(MockMvcRequestBuilders.put(endpoint)
+                            .with(token)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content(om.writeValueAsString(acceptor)))
+                    .andExpect(status().isForbidden());
         }
     }
 
@@ -195,9 +214,11 @@ class UserControllerTest extends TestUtils {
         @Test
         void deleteUserWithTokenTest() throws Exception {
             var endpoint = SLUG + "/" + testUser.getId();
+            var jwt = genJwt(testUser.getEmail());
+
             mockMvc.perform(MockMvcRequestBuilders.delete(endpoint)
-                            .with(token))
-                    .andExpect(status().isOk());
+                            .with(jwt))
+                    .andExpect(status().isNoContent());
 
             assertTrue(repository.findById(testUser.getId()).isEmpty());
         }
@@ -209,6 +230,15 @@ class UserControllerTest extends TestUtils {
                     .andExpect(status().isUnauthorized());
 
             assertTrue(repository.findById(testUser.getId()).isPresent());
+        }
+
+        @Test
+        void deleteAnotherUserTest() throws Exception {
+            var anotherUser = Instancio.of(generator.getUserModel()).create();
+            var endpoint = SLUG + "/" + anotherUser.getId();
+            mockMvc.perform(MockMvcRequestBuilders.delete(endpoint)
+                            .with(token))
+                    .andExpect(status().isForbidden());
         }
     }
 

@@ -253,20 +253,6 @@ class TaskControllerTest extends TestUtils {
         }
 
         @Test
-        void deleteUserTest() throws Exception {
-            var endpoint = "/api/users/" + testUser.getId();
-            var body = mockMvc.perform(MockMvcRequestBuilders.delete(endpoint)
-                            .with(token))
-                    .andExpect(status().isBadRequest())
-                    .andReturn()
-                    .getResponse()
-                    .getContentAsString();
-
-            assertEquals(ErrorMessages.CONSTRAINT, body);
-            assertTrue(userRepository.findById(testUser.getId()).isPresent());
-        }
-
-        @Test
         void deleteTaskStatusTest() throws Exception {
             var endpoint = "/api/task_statuses/" + testStatus.getId();
             var body = mockMvc.perform(MockMvcRequestBuilders.delete(endpoint)

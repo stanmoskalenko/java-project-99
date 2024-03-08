@@ -3,30 +3,22 @@ package hexlet.code.component;
 import hexlet.code.dto.user.acceptor.CreateUserAcceptor;
 import hexlet.code.mapper.UserMapper;
 import hexlet.code.repository.UserRepository;
-
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class UserInitializer implements ApplicationRunner {
 
     private final UserRepository repository;
     private final UserMapper mapper;
-    private final String defaultUserEmail;
-    private final String defaultUserPassword;
-
-    public UserInitializer(
-            UserRepository repository,
-            UserMapper mapper,
-            @Value("${app.user.email}") String defaultUserEmail,
-            @Value("${app.user.password}") String defaultUserPassword) {
-        this.repository = repository;
-        this.mapper = mapper;
-        this.defaultUserEmail = defaultUserEmail;
-        this.defaultUserPassword = defaultUserPassword;
-    }
+    @Value("${app.user.email}")
+    private String defaultUserEmail;
+    @Value("${app.user.password}")
+    private String defaultUserPassword;
 
     /**
      * This method is invoked at the startup of the application.

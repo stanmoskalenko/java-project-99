@@ -1,5 +1,6 @@
 package hexlet.code.controller.user;
 
+import hexlet.code.component.UserUtils;
 import hexlet.code.dto.user.UserDto;
 import hexlet.code.dto.user.acceptor.CreateUserAcceptor;
 import hexlet.code.dto.user.acceptor.UpdateUserAcceptor;
@@ -8,6 +9,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,6 +28,7 @@ import java.util.List;
 public class UserController {
 
     private final UserService service;
+    private UserUtils userUtils;
 
     /**
      * Fetches a list of all users.
@@ -71,6 +74,7 @@ public class UserController {
      * @return A UserDto object representing the updated user.
      */
     @PutMapping("/{id}")
+    @PreAuthorize("@userUtils.isCurrentUser(#id)")
     public UserDto update(@PathVariable long id, @Valid @RequestBody UpdateUserAcceptor acceptor) {
         return service.update(id, acceptor);
     }
@@ -81,6 +85,8 @@ public class UserController {
      * @param id The ID of the user to delete.
      */
     @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("@userUtils.isCurrentUser(#id)")
     public void delete(@PathVariable long id) {
         service.delete(id);
     }

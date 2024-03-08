@@ -21,7 +21,7 @@ import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
 @Configuration
-@EnableWebSecurity()
+@EnableWebSecurity
 @EnableMethodSecurity(securedEnabled = true)
 @AllArgsConstructor
 public class SecurityConfig {
@@ -36,7 +36,7 @@ public class SecurityConfig {
      * It sets up the URL patterns that require authentication and the ones that are publicly accessible.
      * It also configures the session management policy and the OAuth2 resource server settings.
      *
-     * @param http an HttpSecurity instance used to build the security configuration
+     * @param http         an HttpSecurity instance used to build the security configuration
      * @param introspector a HandlerMappingIntrospector instance used to create MvcRequestMatcher
      * @return a SecurityFilterChain instance with the configured security settings
      * @throws Exception if an error occurs during the configuration
@@ -50,7 +50,7 @@ public class SecurityConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/").permitAll()
+                        .requestMatchers("/*").permitAll()
                         .requestMatchers("/index.html").permitAll()
                         .requestMatchers("/assets/**").permitAll()
                         .requestMatchers(mvcMatcherBuilder.pattern("api/login")).permitAll()

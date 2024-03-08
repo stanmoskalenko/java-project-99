@@ -5,11 +5,12 @@ import hexlet.code.mapper.TaskStatusMapper;
 import hexlet.code.repository.TaskStatusRepository;
 import lombok.AllArgsConstructor;
 import org.apache.commons.text.CaseUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
+import java.util.Arrays;
 
 @Component
 @AllArgsConstructor
@@ -17,6 +18,8 @@ public class TaskStatusInitializer implements ApplicationRunner {
 
     private final TaskStatusRepository repository;
     private final TaskStatusMapper mapper;
+    @Value("${app.task-statuses}")
+    private String[] taskStatuses;
 
     /**
      * This method is executed when the application starts. It initializes the task statuses in the repository.
@@ -29,19 +32,12 @@ public class TaskStatusInitializer implements ApplicationRunner {
      */
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        var taskStatuses2 = List.of(
-                "draft",
-                "to_review",
-                "to_be_fixed",
-                "to_publish",
-                "published",
-                "feature",
-                "bug");
-        taskStatuses2.forEach(name -> {
+        Arrays.stream(taskStatuses).forEach(name -> {
             var slug = CaseUtils.toCamelCase(name, true, '_');
             var acceptor = new CreateTaskStatusAcceptor(name, slug);
             var entity = mapper.toCreateEntity(acceptor);
             repository.save(entity);
         });
     }
+
 }
