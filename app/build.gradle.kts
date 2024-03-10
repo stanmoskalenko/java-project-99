@@ -12,7 +12,7 @@ plugins {
 }
 
 group = "hexlet.code"
-version = "0.0.1-SNAPSHOT"
+version = "1.0-SNAPSHOT"
 repositories.mavenCentral()
 application.mainClass
 
@@ -37,6 +37,9 @@ tasks {
             showFailed = true
             showPassed = true
         }
+    }
+    getByName<Jar>("jar") {
+        enabled = false
     }
 }
 

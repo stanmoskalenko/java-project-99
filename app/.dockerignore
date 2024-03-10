@@ -1,0 +1,7 @@
+package-lock.json
+package.json
+.gradle
+build
+config
+node_modules
+Makefile

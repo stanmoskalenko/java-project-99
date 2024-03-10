@@ -1,0 +1,13 @@
+---
+spring:
+  datasource:
+    url: ${JDBC_DATABASE_URL:jdbc:h2:mem:dev;DB_CLOSE_DELAY=-1;LOCK_MODE=0}
+
+app:
+  user:
+    email: ${USER_EMAIL:hexlet@example.com}
+    password: ${USER_PASSWORD:qwerty}
+
+logging:
+  level:
+    root: INFO

@@ -1,6 +1,6 @@
 ### Gradle ###
-/app/.gradle
-/app/build/
+.gradle
+build/
 !gradle/wrapper/gradle-wrapper.jar
 
 ### IntelliJ IDEA ###
@@ -17,3 +17,8 @@ out/
 
 ### Mac OS ###
 .DS_Store
+
+/node_modules/
+/package.json
+/package-lock.json
+/src/main/resources/static/

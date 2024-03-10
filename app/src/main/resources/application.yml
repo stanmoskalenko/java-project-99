@@ -1,7 +1,7 @@
 ---
 spring:
   profiles:
-    default: development
+    default: dev
   jpa:
     generate-ddl: true
     show-sql: true
@@ -31,4 +31,3 @@ app:
 
 server:
   address: 0.0.0.0
-  port: 7070
