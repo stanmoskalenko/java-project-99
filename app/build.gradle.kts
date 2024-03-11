@@ -44,7 +44,6 @@ tasks {
 }
 
 dependencies {
-    implementation("org.springframework:spring-webmvc:6.1.4")
     implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
@@ -57,7 +56,6 @@ dependencies {
 
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0")
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-api:2.3.0")
-    implementation("org.webjars:swagger-ui:4.8.1")
 
     implementation("org.apache.commons:commons-lang3:3.14.0")
     implementation("org.openapitools:jackson-databind-nullable:0.2.6")
