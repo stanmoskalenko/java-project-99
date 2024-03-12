@@ -1,16 +1,10 @@
 .PHONY: build frontend
 
-setup:
-	npm i @hexlet/java-task-manager-frontend; \
-	gradle wrapper --gradle-version 8.5; \
-	gradle build
-
 clean:
-	gradle clean
+	./gradlew clean
 
 release:
-	./gradlew clean bootJar \
-	-Pprofile=prod \
+	./gradlew clean build \
     --no-daemon \
     --parallel \
     --exclude-task test \
@@ -23,16 +17,16 @@ build:
 	./gradlew clean build
 
 install:
-	gradle installDist
+	./gradlew installDist
 
 lint:
-	gradle checkstyleMain checkstyleTest
+	./gradlew checkstyleMain checkstyleTest
 
 test:
-	gradle test
+	./gradlew test
 
 report:
-	gradle test jacocoTestReport
+	./gradlew test jacocoTestReport
 
-frontend:
-	npx build-frontend
+run:
+	./gradlew bootRun

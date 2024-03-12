@@ -7,14 +7,38 @@
 
 </div>
 
+
+## Description
+The Task Manager is a task management system similar to [Redmine](http://www.redmine.org/). It enables users to assign tasks, designate performers, and modify their statuses. Registration and authentication are required to operate the system.
+
+### Authorization
+The project's authorization is implemented through Spring Security, utilizing JWT and RSA.
+
+### API
+The project's API supports data filtering.
+
+### Error Tracking
+The project incorporates a mechanism that tracks errors occurring in production and alerts about them. This task is handled by the Sentry error collector.
+
+### Technologies
+The project is implemented using the following technologies:
+- Java
+- Spring Boot
+- Gradle
+- Sentry
+- Docker
+- GitHub Workflows
+
+After successful CI, the application is deployed on [render.io](https://render.com/). The application also provides OpenAPI documentation at `host:port/swagger-ui/index.html`.
+
 ## Usage
 
-### Setup
+### Project Launch
 
-To setup application, run:
+To launch the project, run:
 
 ```bash
-make setup
+make run
 ```
 
 ### Build
