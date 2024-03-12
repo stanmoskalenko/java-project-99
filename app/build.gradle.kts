@@ -8,6 +8,7 @@ plugins {
     id("io.freefair.lombok") version "8.3"
     id("com.adarshr.test-logger") version "4.0.0"
     id("org.springframework.boot") version "3.2.3"
+    id("io.sentry.jvm.gradle") version "4.3.1"
     id("io.spring.dependency-management") version "1.1.4"
 }
 

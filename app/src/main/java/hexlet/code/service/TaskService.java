@@ -1,14 +1,18 @@
-package hexlet.code.service.task;
+package hexlet.code.service;
 
 
 import hexlet.code.dto.task.TaskDto;
 import hexlet.code.dto.task.acceptor.CreateTaskAcceptor;
+import hexlet.code.dto.task.acceptor.GetListTaskAcceptor;
 import hexlet.code.dto.task.acceptor.UpdateTaskAcceptor;
 import hexlet.code.exception.ResourceNotFoundException;
 import hexlet.code.mapper.TaskMapper;
+import hexlet.code.model.Task;
 import hexlet.code.repository.TaskRepository;
+import hexlet.code.utils.TaskFilterSpecifications;
 import hexlet.code.utils.ErrorMessages;
 import lombok.AllArgsConstructor;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,12 +27,22 @@ public class TaskService {
     private static final String ENTITY_NAME = "Task";
 
     /**
-     * Retrieves all tasks from the repository, converts them to DTOs, and returns them as a list.
+     * Retrieves a list of tasks based on the criteria specified in the {@link GetListTaskAcceptor} object.
+     * Each task is converted to a {@link TaskDto} before being returned. The method constructs a {@link Specification}
+     * object using the criteria from the {@link GetListTaskAcceptor}, such as title content,
+     * assignee ID, status, and label ID.
+     * This specification is then used to query the repository for matching tasks.
      *
-     * @return a list of TaskDto objects representing all tasks in the repository.
+     * @param acceptor An instance of {@link GetListTaskAcceptor} containing the search criteria for tasks.
+     * @return A list of {@link TaskDto} objects representing the tasks that match the given criteria.
      */
-    public List<TaskDto> getList() {
-        return repository.findAll()
+    public List<TaskDto> getList(GetListTaskAcceptor acceptor) {
+        Specification<Task> spec = Specification
+                .where(TaskFilterSpecifications.titleContainsIgnoreCase(acceptor.getTitleCont()))
+                .and(TaskFilterSpecifications.hasAssignee(acceptor.getAssigneeId()))
+                .and(TaskFilterSpecifications.hasStatus(acceptor.getStatus()))
+                .and(TaskFilterSpecifications.hasLabel(acceptor.getLabelId()));
+        return repository.findAll(spec)
                 .stream()
                 .map(mapper::toDto)
                 .toList();

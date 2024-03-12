@@ -1,4 +1,4 @@
-package hexlet.code.service.label;
+package hexlet.code.service;
 
 import hexlet.code.dto.label.LabelDto;
 import hexlet.code.dto.label.acceptor.LabelAcceptor;

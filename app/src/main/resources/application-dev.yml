@@ -21,6 +21,3 @@ logging:
         web: DEBUG
         security: DEBUG
 
-
-#url: jdbc:postgresql://localhost:5433/postgres?user=store&password=secret
-#driver-class-name: org.postgresql.Driver

@@ -1,4 +1,4 @@
-package hexlet.code.controller.user;
+package hexlet.code.controller;
 
 import hexlet.code.component.ModelGenerator;
 import hexlet.code.dto.user.acceptor.CreateUserAcceptor;
@@ -40,7 +40,7 @@ class UserControllerTest extends TestUtils {
     class GetListTest {
 
         @Test
-        void getListWithTokenTest() throws Exception {
+        void getListTest() throws Exception {
             var body = mockMvc.perform(MockMvcRequestBuilders.get(SLUG)
                             .with(token))
                     .andExpect(status().isOk())
@@ -63,7 +63,7 @@ class UserControllerTest extends TestUtils {
     class GetByIdTest {
 
         @Test
-        void getUserWithTokenTest() throws Exception {
+        void getUserTest() throws Exception {
             var testUser = Instancio.of(generator.getUserModel()).create();
             repository.save(testUser);
             var endpoint = SLUG + "/" + testUser.getId();
@@ -103,7 +103,7 @@ class UserControllerTest extends TestUtils {
         }
 
         @Test
-        void createUserWithTokenTest() throws Exception {
+        void createUserTest() throws Exception {
             var acceptor = getAcceptor();
             var body = mockMvc.perform(MockMvcRequestBuilders.post(SLUG)
                             .with(token)
@@ -149,7 +149,7 @@ class UserControllerTest extends TestUtils {
         }
 
         @Test
-        void updateUserWithTokenTest() throws Exception {
+        void updateUserTest() throws Exception {
             var acceptor = getAcceptor();
             var userId = getUser().getId();
             var endpoint = SLUG + "/" + userId;
@@ -212,7 +212,7 @@ class UserControllerTest extends TestUtils {
         }
 
         @Test
-        void deleteUserWithTokenTest() throws Exception {
+        void deleteUserTest() throws Exception {
             var endpoint = SLUG + "/" + testUser.getId();
             var jwt = genJwt(testUser.getEmail());
 

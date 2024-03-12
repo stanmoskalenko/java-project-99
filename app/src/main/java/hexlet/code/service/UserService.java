@@ -1,4 +1,4 @@
-package hexlet.code.service.user;
+package hexlet.code.service;
 
 import hexlet.code.dto.user.UserDto;
 import hexlet.code.dto.user.acceptor.CreateUserAcceptor;

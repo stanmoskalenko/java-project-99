@@ -1,6 +1,6 @@
 package hexlet.code.config;
 
-import hexlet.code.service.user.UserService;
+import hexlet.code.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

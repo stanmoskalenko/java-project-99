@@ -1,8 +1,8 @@
-package hexlet.code.controller.label;
+package hexlet.code.controller;
 
 import hexlet.code.dto.label.LabelDto;
 import hexlet.code.dto.label.acceptor.LabelAcceptor;
-import hexlet.code.service.label.LabelService;
+import hexlet.code.service.LabelService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

@@ -1,10 +1,10 @@
-package hexlet.code.controller.user;
+package hexlet.code.controller;
 
 import hexlet.code.component.UserUtils;
 import hexlet.code.dto.user.UserDto;
 import hexlet.code.dto.user.acceptor.CreateUserAcceptor;
 import hexlet.code.dto.user.acceptor.UpdateUserAcceptor;
-import hexlet.code.service.user.UserService;
+import hexlet.code.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

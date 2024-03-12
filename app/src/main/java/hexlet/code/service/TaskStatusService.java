@@ -1,4 +1,4 @@
-package hexlet.code.service.taskstatus;
+package hexlet.code.service;
 
 import hexlet.code.dto.taskstatus.TaskStatusDto;
 import hexlet.code.dto.taskstatus.acceptor.CreateTaskStatusAcceptor;

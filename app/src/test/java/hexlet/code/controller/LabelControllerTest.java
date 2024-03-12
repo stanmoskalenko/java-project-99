@@ -1,10 +1,9 @@
-package hexlet.code.controller.taskstatus;
+package hexlet.code.controller;
 
 import hexlet.code.component.ModelGenerator;
-import hexlet.code.dto.taskstatus.acceptor.CreateTaskStatusAcceptor;
-import hexlet.code.dto.taskstatus.acceptor.UpdateTaskStatusAcceptor;
-import hexlet.code.model.TaskStatus;
-import hexlet.code.repository.TaskStatusRepository;
+import hexlet.code.dto.label.acceptor.LabelAcceptor;
+import hexlet.code.model.Label;
+import hexlet.code.repository.LabelRepository;
 import hexlet.code.utils.TestUtils;
 import net.datafaker.Faker;
 import org.instancio.Instancio;
@@ -22,27 +21,28 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+
 @AutoConfigureMockMvc
-class TaskStatusControllerTest extends TestUtils {
+class LabelControllerTest extends TestUtils {
 
     @Autowired
     MockMvc mockMvc;
     @Autowired
-    TaskStatusRepository repository;
+    LabelRepository repository;
     @Autowired
     ModelGenerator generator;
     @Autowired
     Faker faker;
 
-    private static final String SLUG = "/api/task_statuses";
+    private static final String SLUG = "/api/labels";
 
     @Nested
     class GetListTest {
 
         @Test
-        void getListWithTokenTest() throws Exception {
-            var testTaskStatus = Instancio.of(generator.getTaskStatusModel()).create();
-            repository.save(testTaskStatus);
+        void getListTest() throws Exception {
+            var testLabel = Instancio.of(generator.getLabelModel()).create();
+            repository.save(testLabel);
 
             var body = mockMvc.perform(MockMvcRequestBuilders.get(SLUG)
                             .with(token))
@@ -66,10 +66,10 @@ class TaskStatusControllerTest extends TestUtils {
     class GetByIdTest {
 
         @Test
-        void getUserWithTokenTest() throws Exception {
-            var testTaskStatus = Instancio.of(generator.getTaskStatusModel()).create();
-            repository.save(testTaskStatus);
-            var endpoint = SLUG + "/" + testTaskStatus.getId();
+        void getUserTest() throws Exception {
+            var testLabel = Instancio.of(generator.getLabelModel()).create();
+            repository.save(testLabel);
+            var endpoint = SLUG + "/" + testLabel.getId();
 
             var body = mockMvc.perform(MockMvcRequestBuilders.get(endpoint)
                             .with(token))
@@ -79,32 +79,37 @@ class TaskStatusControllerTest extends TestUtils {
                     .getContentAsString();
 
             assertThatJson(body).and(
-                    v -> v.node("id").isEqualTo(testTaskStatus.getId()),
-                    v -> v.node("name").isEqualTo(testTaskStatus.getName()),
-                    v -> v.node("slug").isEqualTo(testTaskStatus.getSlug()),
+                    v -> v.node("id").isEqualTo(testLabel.getId()),
+                    v -> v.node("name").isEqualTo(testLabel.getName()),
                     v -> v.node("createdAt").isNotNull());
         }
 
         @Test
         void getUserWithoutTokenTest() throws Exception {
-            mockMvc.perform(MockMvcRequestBuilders.get("/api/task_statuses/1"))
+            mockMvc.perform(MockMvcRequestBuilders.get("/api/labels/1"))
                     .andExpect(status().isUnauthorized());
+        }
+
+        @Test
+        void getNonExistentUserWithoutTokenTest() throws Exception {
+            mockMvc.perform(MockMvcRequestBuilders.get("/api/task_statuses/9999")
+                            .with(token))
+                    .andExpect(status().isNotFound());
         }
     }
 
     @Nested
-    class CreateTaskStatusTest {
+    class CreateLabelTest {
 
-        private CreateTaskStatusAcceptor getAcceptor() {
-            var acceptor = new CreateTaskStatusAcceptor();
+        private LabelAcceptor getAcceptor() {
+            var acceptor = new LabelAcceptor();
             acceptor.setName(faker.internet().domainName());
-            acceptor.setSlug(faker.internet().slug());
 
             return acceptor;
         }
 
         @Test
-        void createTaskStatusWithTokenTest() throws Exception {
+        void createLabelTest() throws Exception {
             var acceptor = getAcceptor();
             var body = mockMvc.perform(MockMvcRequestBuilders.post(SLUG)
                             .with(token)
@@ -118,12 +123,11 @@ class TaskStatusControllerTest extends TestUtils {
             assertThatJson(body).and(
                     v -> v.node("id").isNotNull(),
                     v -> v.node("createdAt").isNotNull(),
-                    v -> v.node("name").isEqualTo(acceptor.getName()),
-                    v -> v.node("slug").isEqualTo(acceptor.getSlug()));
+                    v -> v.node("name").isEqualTo(acceptor.getName()));
         }
 
         @Test
-        void createTaskStatusWithoutTokenTest() throws Exception {
+        void createLabelWithoutTokenTest() throws Exception {
             var acceptor = getAcceptor();
             mockMvc.perform(MockMvcRequestBuilders.get(SLUG)
                             .contentType(MediaType.APPLICATION_JSON)
@@ -133,28 +137,28 @@ class TaskStatusControllerTest extends TestUtils {
     }
 
     @Nested
-    class UpdateTaskStatusTest {
+    class UpdateLabelTest {
 
-        private TaskStatus testTaskStatus;
+        private Label testLabel;
 
         @BeforeEach
         public void setUp() {
-            var testData = Instancio.of(generator.getTaskStatusModel()).create();
-            testTaskStatus = repository.save(testData);
+            var testData = Instancio.of(generator.getLabelModel()).create();
+            testLabel = repository.save(testData);
         }
 
-        private UpdateTaskStatusAcceptor getAcceptor() {
-            var acceptor = new UpdateTaskStatusAcceptor();
+        private LabelAcceptor getAcceptor() {
+            var acceptor = new LabelAcceptor();
             acceptor.setName(faker.internet().domainName());
 
             return acceptor;
         }
 
         @Test
-        void updateTaskStatusWithTokenTest() throws Exception {
+        void updateLabelTest() throws Exception {
             var acceptor = getAcceptor();
 
-            var endpoint = SLUG + "/" + testTaskStatus.getId();
+            var endpoint = SLUG + "/" + testLabel.getId();
             var body = mockMvc.perform(MockMvcRequestBuilders.put(endpoint)
                             .with(token)
                             .contentType(MediaType.APPLICATION_JSON)
@@ -164,19 +168,18 @@ class TaskStatusControllerTest extends TestUtils {
                     .getResponse()
                     .getContentAsString();
 
-            var actual = repository.findById(testTaskStatus.getId()).get();
+            var actual = repository.findById(testLabel.getId()).get();
 
             assertThatJson(body).and(
                     v -> v.node("createdAt").isNotNull(),
-                    v -> v.node("id").isEqualTo(testTaskStatus.getId()),
-                    v -> v.node("name").isEqualTo(actual.getName()),
-                    v -> v.node("slug").isEqualTo(testTaskStatus.getSlug()));
+                    v -> v.node("id").isEqualTo(testLabel.getId()),
+                    v -> v.node("name").isEqualTo(actual.getName()));
         }
 
         @Test
-        void updateTaskStatusWithoutTokenTest() throws Exception {
+        void updateLabelWithoutTokenTest() throws Exception {
             var acceptor = getAcceptor();
-            var endpoint = SLUG + "/" + testTaskStatus.getId();
+            var endpoint = SLUG + "/" + testLabel.getId();
             mockMvc.perform(MockMvcRequestBuilders.get(endpoint)
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(om.writeValueAsString(acceptor)))
@@ -185,33 +188,33 @@ class TaskStatusControllerTest extends TestUtils {
     }
 
     @Nested
-    class DeleteTaskStatusTest {
+    class DeleteLabelTest {
 
-        private TaskStatus testTaskStatus;
+        private Label testLabel;
 
         @BeforeEach
         public void setUp() {
-            testTaskStatus = Instancio.of(generator.getTaskStatusModel()).create();
-            repository.save(testTaskStatus);
+            testLabel = Instancio.of(generator.getLabelModel()).create();
+            repository.save(testLabel);
         }
 
         @Test
-        void deleteTaskStatusWithTokenTest() throws Exception {
-            var endpoint = SLUG + "/" + testTaskStatus.getId();
+        void deleteLabelTest() throws Exception {
+            var endpoint = SLUG + "/" + testLabel.getId();
             mockMvc.perform(MockMvcRequestBuilders.delete(endpoint)
                             .with(token))
                     .andExpect(status().isOk());
 
-            assertTrue(repository.findById(testTaskStatus.getId()).isEmpty());
+            assertTrue(repository.findById(testLabel.getId()).isEmpty());
         }
 
         @Test
-        void deleteTaskStatusWithoutTokenTest() throws Exception {
-            var endpoint = SLUG + "/" + testTaskStatus.getId();
+        void deleteLabelWithoutTokenTest() throws Exception {
+            var endpoint = SLUG + "/" + testLabel.getId();
             mockMvc.perform(MockMvcRequestBuilders.delete(endpoint))
                     .andExpect(status().isUnauthorized());
 
-            assertTrue(repository.findById(testTaskStatus.getId()).isPresent());
+            assertTrue(repository.findById(testLabel.getId()).isPresent());
         }
     }
 

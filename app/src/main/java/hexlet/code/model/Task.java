@@ -10,8 +10,9 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -20,11 +21,11 @@ import java.util.List;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "tasks")
 @EntityListeners(AuditingEntityListener.class)
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Task {
 
     @Id

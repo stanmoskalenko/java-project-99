@@ -1,5 +1,8 @@
 package hexlet.code.utils;
 
+import lombok.experimental.UtilityClass;
+
+@UtilityClass
 public class ErrorMessages {
 
     public static final String CONSTRAINT = "Deletion prohibited, integrity constraint violation!";

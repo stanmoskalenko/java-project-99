@@ -1,4 +1,4 @@
-package hexlet.code.controller.task;
+package hexlet.code.controller;
 
 import hexlet.code.component.ModelGenerator;
 import hexlet.code.dto.task.acceptor.CreateTaskAcceptor;
@@ -85,7 +85,7 @@ class TaskControllerTest extends TestUtils {
     class GetListTest {
 
         @Test
-        void getListWithTokenTest() throws Exception {
+        void getListTest() throws Exception {
             var body = mockMvc.perform(MockMvcRequestBuilders.get(SLUG)
                             .with(token))
                     .andExpect(status().isOk())
@@ -96,6 +96,45 @@ class TaskControllerTest extends TestUtils {
 
             assertThatJson(body).isArray();
         }
+
+        @Test
+        void getListWithFilterTest() throws Exception {
+            var labelId = testTask.getLabels().get(0).getId();
+            var endpoint = SLUG
+                    + "?titleCont=" + testTask.getName().toUpperCase()
+                    + "&assigneeId=" + testTask.getAssignee().getId()
+                    + "&status=" + testTask.getStatus().getName()
+                    + "&labelId=" + labelId;
+
+            var body = mockMvc.perform(MockMvcRequestBuilders.get(endpoint)
+                            .with(token))
+                    .andExpect(status().isOk())
+                    .andExpect(header().exists("X-Total-Count"))
+                    .andReturn()
+                    .getResponse()
+                    .getContentAsString();
+
+            assertThatJson(body)
+                    .isArray().first().and(
+                            t -> t.node("id").isEqualTo(testTask.getId()),
+                            t -> t.node("status").isEqualTo(testTask.getStatus().getSlug()),
+                            t -> t.node("content").isEqualTo(testTask.getDescription()),
+                            t -> t.node("index").isEqualTo(testTask.getIndex()),
+                            t -> t.node("taskLabelIds").isArray().singleElement().isEqualTo(labelId),
+                            t -> t.node("assignee_id").isEqualTo(testTask.getAssignee().getId()));
+
+            var noMatchEndpoint = SLUG + "?titleCont=create&assigneeId=99999&status=to_be_fixed&labelId=9999";
+            var emptyBody = mockMvc.perform(MockMvcRequestBuilders.get(noMatchEndpoint)
+                            .with(token))
+                    .andExpect(status().isOk())
+                    .andExpect(header().exists("X-Total-Count"))
+                    .andReturn()
+                    .getResponse()
+                    .getContentAsString();
+
+            assertThatJson(emptyBody).isArray().isEmpty();
+        }
+
 
         @Test
         void getListWithoutTokenTest() throws Exception {
@@ -109,7 +148,7 @@ class TaskControllerTest extends TestUtils {
     class GetByIdTest {
 
         @Test
-        void getUserWithTokenTest() throws Exception {
+        void getUserTest() throws Exception {
             var endpoint = SLUG + "/" + testTask.getId();
 
             var body = mockMvc.perform(MockMvcRequestBuilders.get(endpoint)
@@ -150,7 +189,7 @@ class TaskControllerTest extends TestUtils {
         }
 
         @Test
-        void createTaskWithTokenTest() throws Exception {
+        void createTaskTest() throws Exception {
             var acceptor = getAcceptor();
             var body = mockMvc.perform(MockMvcRequestBuilders.post(SLUG)
                             .with(token)
@@ -195,7 +234,7 @@ class TaskControllerTest extends TestUtils {
         }
 
         @Test
-        void updateTaskWithTokenTest() throws Exception {
+        void updateTaskTest() throws Exception {
             var acceptor = getAcceptor();
 
             var endpoint = SLUG + "/" + testTask.getId();
@@ -233,7 +272,7 @@ class TaskControllerTest extends TestUtils {
     class DeleteTaskTest {
 
         @Test
-        void deleteTaskWithTokenTest() throws Exception {
+        void deleteTaskTest() throws Exception {
             var endpoint = SLUG + "/" + testTask.getId();
             mockMvc.perform(MockMvcRequestBuilders.delete(endpoint)
                             .with(token))

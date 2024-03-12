@@ -1,9 +1,10 @@
-package hexlet.code.controller.task;
+package hexlet.code.controller;
 
 import hexlet.code.dto.task.TaskDto;
 import hexlet.code.dto.task.acceptor.CreateTaskAcceptor;
+import hexlet.code.dto.task.acceptor.GetListTaskAcceptor;
 import hexlet.code.dto.task.acceptor.UpdateTaskAcceptor;
-import hexlet.code.service.task.TaskService;
+import hexlet.code.service.TaskService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -30,13 +32,22 @@ public class TaskController {
     private final TaskService service;
 
     /**
-     * Retrieves a list of all tasks.
+     * Retrieves a list of tasks based on the specified criteria.
+     * <p>
+     * This method accepts a {@link GetListTaskAcceptor} object that contains various
+     * filtering criteria such as title content, assignee ID, status, and label ID. It then uses
+     * these criteria to fetch a list of tasks from the {@link TaskService}.
+     * The resulting list of {@link TaskDto} objects is returned along with a custom header `X-Total-Count`
+     * indicating the total number of tasks found.
+     * </p>
      *
-     * @return a ResponseEntity containing a list of TaskDto objects and a header indicating the total count of tasks.
+     * @param acceptor An instance of {@link GetListTaskAcceptor} containing the search criteria for tasks.
+     * @return A {@link ResponseEntity} containing the list of {@link TaskDto} objects that match the given
+     * criteria and the total count of these tasks in the `X-Total-Count` header.
      */
     @GetMapping
-    public ResponseEntity<List<TaskDto>> getList() {
-        var result = service.getList();
+    public ResponseEntity<List<TaskDto>> getList(@ModelAttribute GetListTaskAcceptor acceptor) {
+        var result = service.getList(acceptor);
         return ResponseEntity.ok()
                 .header("X-Total-Count", String.valueOf(result.size()))
                 .body(result);
@@ -68,7 +79,7 @@ public class TaskController {
     /**
      * Updates an existing task.
      *
-     * @param id the ID of the task to update.
+     * @param id       the ID of the task to update.
      * @param acceptor an UpdateTaskAcceptor object containing the new details of the task.
      * @return the updated TaskDto object.
      */
