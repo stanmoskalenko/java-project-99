@@ -30,3 +30,7 @@ report:
 
 run:
 	./gradlew bootRun
+
+setup:
+	./gradlew wrapper --gradle-version 8.5
+	./gradlew build
