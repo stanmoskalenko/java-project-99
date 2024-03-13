@@ -12,8 +12,8 @@ WORKDIR $APP_HOME
 
 COPY build.gradle.kts settings.gradle.kts $APP_HOME
 COPY gradle $APP_HOME/gradle
-COPY --chown=gradle:gradle . /home/gradle/wrapper
-COPY . .
+COPY --chown=gradle:gradle app /home/gradle/wrapper
+COPY app .
 
 RUN gradle clean build \
     --no-daemon \
@@ -26,7 +26,7 @@ RUN gradle clean build \
 
 FROM bellsoft/liberica-openjdk-alpine:17-cds
 LABEL name=test-manager-99
-ENV ARTIFACT_NAME="app-1.0-SNAPSHOT.jar"
+ENV ARTIFACT_NAME="app-0.0.1-SNAPSHOT.jar"
 ENV APP_HOME=/usr/app/
 
 WORKDIR /usr/app/
