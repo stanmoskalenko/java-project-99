@@ -13,7 +13,7 @@ WORKDIR $APP_HOME
 COPY build.gradle.kts settings.gradle.kts $APP_HOME
 COPY gradle $APP_HOME/gradle
 COPY --chown=gradle:gradle app /home/gradle/wrapper
-COPY app .
+COPY . .
 
 RUN gradle clean build \
     --no-daemon \
