@@ -18,6 +18,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -114,6 +116,11 @@ class TaskStatusControllerTest extends TestUtils {
                     .andReturn()
                     .getResponse()
                     .getContentAsString();
+
+            var actual = repository.findByName(acceptor.getName()).get();
+
+            assertEquals(acceptor.getName(), actual.getName());
+            assertNotNull(actual.getCreatedAt());
 
             assertThatJson(body).and(
                     v -> v.node("id").isNotNull(),

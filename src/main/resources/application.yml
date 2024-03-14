@@ -20,7 +20,8 @@ app:
     to_review,
     to_be_fixed,
     to_publish,
-    published,
+    published
+  labels: >
     feature,
     bug
 

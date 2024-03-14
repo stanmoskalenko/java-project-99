@@ -18,6 +18,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -113,6 +116,15 @@ class UserControllerTest extends TestUtils {
                     .andReturn()
                     .getResponse()
                     .getContentAsString();
+
+            var actual = repository.findByEmail(acceptor.getEmail()).get();
+
+            assertNotEquals(acceptor.getPassword(), actual.getPassword());
+            assertEquals(acceptor.getEmail(), actual.getEmail());
+            assertEquals(acceptor.getFirstName(), actual.getFirstName());
+            assertEquals(acceptor.getLastName(), actual.getLastName());
+            assertNotNull(actual.getPassword());
+            assertNotNull(actual.getCreatedAt());
 
             assertThatJson(body).and(
                     v -> v.node("id").isNotNull(),
@@ -239,6 +251,8 @@ class UserControllerTest extends TestUtils {
             mockMvc.perform(MockMvcRequestBuilders.delete(endpoint)
                             .with(getToken()))
                     .andExpect(status().isForbidden());
+
+            assertTrue(repository.findById(testUser.getId()).isPresent());
         }
     }
 

@@ -30,6 +30,7 @@ import java.util.Map;
 
 import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -199,6 +200,14 @@ class TaskControllerTest extends TestUtils {
                     .andReturn()
                     .getResponse()
                     .getContentAsString();
+
+            var actual = repository.findByName(acceptor.getTitle()).get();
+
+            assertNotNull(actual.getCreatedAt());
+            assertEquals(acceptor.getTitle(), actual.getName());
+            assertEquals(acceptor.getContent(), actual.getDescription());
+            assertEquals(acceptor.getStatus(), actual.getStatus().getSlug());
+            assertEquals(acceptor.getAssigneeId(), actual.getAssignee().getId());
 
             assertThatJson(body).and(
                     v -> v.node("id").isNotNull(),
