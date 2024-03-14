@@ -92,7 +92,7 @@ public abstract class TaskMapper {
      */
     @Named(value = "resolveLabelsByIds")
     public List<Label> getLabelById(List<Long> ids) {
-        return CollectionUtils.isEmpty(ids) ? List.of() : labelRepository.findAllById(ids);
+        return CollectionUtils.isEmpty(ids) ? null : labelRepository.findAllById(ids);
     }
 
     /**
