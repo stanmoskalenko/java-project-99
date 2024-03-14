@@ -38,9 +38,6 @@ tasks {
             showPassed = true
         }
     }
-    getByName<Jar>("jar") {
-        enabled = false
-    }
 }
 
 dependencies {
