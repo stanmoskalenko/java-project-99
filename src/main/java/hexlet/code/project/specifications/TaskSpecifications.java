@@ -1,14 +1,13 @@
-package hexlet.code.project.utils;
+package hexlet.code.project.specifications;
 
 import hexlet.code.project.model.Label;
 import hexlet.code.project.model.Task;
 import jakarta.persistence.criteria.Join;
-import lombok.experimental.UtilityClass;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Component;
 
-
-@UtilityClass
-public final class TaskFilterSpecifications {
+@Component
+public class TaskSpecifications {
 
     public static Specification<Task> titleContainsIgnoreCase(String title) {
         return (root, query, cb) -> {

@@ -9,7 +9,7 @@ import hexlet.code.project.exception.ResourceNotFoundException;
 import hexlet.code.project.mapper.TaskMapper;
 import hexlet.code.project.model.Task;
 import hexlet.code.project.repository.TaskRepository;
-import hexlet.code.project.utils.TaskFilterSpecifications;
+import hexlet.code.project.specifications.TaskSpecifications;
 import hexlet.code.project.utils.ErrorMessages;
 import lombok.AllArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
@@ -38,10 +38,10 @@ public class TaskService {
      */
     public List<TaskDto> getList(GetListTaskAcceptor acceptor) {
         Specification<Task> spec = Specification
-                .where(TaskFilterSpecifications.titleContainsIgnoreCase(acceptor.getTitleCont()))
-                .and(TaskFilterSpecifications.hasAssignee(acceptor.getAssigneeId()))
-                .and(TaskFilterSpecifications.hasStatus(acceptor.getStatus()))
-                .and(TaskFilterSpecifications.hasLabel(acceptor.getLabelId()));
+                .where(TaskSpecifications.titleContainsIgnoreCase(acceptor.getTitleCont()))
+                .and(TaskSpecifications.hasAssignee(acceptor.getAssigneeId()))
+                .and(TaskSpecifications.hasStatus(acceptor.getStatus()))
+                .and(TaskSpecifications.hasLabel(acceptor.getLabelId()));
         return repository.findAll(spec)
                 .stream()
                 .map(mapper::toDto)

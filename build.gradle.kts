@@ -25,11 +25,10 @@ configurations {
 
 tasks {
     jacocoTestReport {
-        reports.xml.required = true
+        reports.xml.required
     }
     test {
         useJUnitPlatform()
-        reports.enabled
         testLogging.exceptionFormat = TestExceptionFormat.FULL
         testlogger {
             setTheme(ThemeType.MOCHA)
@@ -38,9 +37,6 @@ tasks {
             showFailed = true
             showPassed = true
         }
-    }
-    getByName<Jar>("jar") {
-        enabled = false
     }
 }
 
