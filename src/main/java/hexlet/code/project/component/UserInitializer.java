@@ -15,9 +15,9 @@ public class UserInitializer implements ApplicationRunner {
 
     private final UserRepository repository;
     private final UserMapper mapper;
-    @Value("${app.user.email}")
+    @Value("${app.user.email:hexlet@example.com}")
     private String defaultUserEmail;
-    @Value("${app.user.password}")
+    @Value("${app.user.password:qwerty}")
     private String defaultUserPassword;
 
     /**

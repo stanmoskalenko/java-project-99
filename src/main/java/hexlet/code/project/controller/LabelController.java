@@ -82,6 +82,7 @@ public class LabelController {
      * @param id the ID of the label to delete.
      */
     @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {
         service.delete(id);
     }

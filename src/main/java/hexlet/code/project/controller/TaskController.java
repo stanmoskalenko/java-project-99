@@ -94,6 +94,7 @@ public class TaskController {
      * @param id the ID of the task to delete.
      */
     @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {
         service.delete(id);
     }

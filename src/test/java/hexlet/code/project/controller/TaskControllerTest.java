@@ -276,7 +276,7 @@ class TaskControllerTest extends TestUtils {
             var endpoint = SLUG + "/" + testTask.getId();
             mockMvc.perform(MockMvcRequestBuilders.delete(endpoint)
                             .with(token))
-                    .andExpect(status().isOk());
+                    .andExpect(status().isNoContent());
 
             assertTrue(repository.findById(testTask.getId()).isEmpty());
 

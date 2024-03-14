@@ -34,11 +34,11 @@ public class Task {
     private long id;
     @Column(nullable = false)
     private String name;
-    @ManyToOne(optional = false)
+    @ManyToOne
     @JoinColumn(name = "status_name")
     private TaskStatus status;
     private Long index;
-    @ManyToOne(optional = false)
+    @ManyToOne
     private User assignee;
     @CreatedDate
     private LocalDate createdAt;

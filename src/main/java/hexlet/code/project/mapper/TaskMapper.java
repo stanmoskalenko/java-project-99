@@ -68,7 +68,7 @@ public abstract class TaskMapper {
     @Named("resolveStatus")
     public TaskStatus getStatusByName(String name) {
         return taskStatusRepository.findBySlug(name)
-                .orElseThrow(() -> new ResourceNotFoundException("TaskStatus = " + name + " not found!"));
+                .orElseThrow(() -> new ResourceNotFoundException("Task Status = " + name + " not found!"));
     }
 
     /**
@@ -80,7 +80,7 @@ public abstract class TaskMapper {
      */
     @Named("resolveUser")
     public User getUserById(Long id) {
-        return userRepository.findById(id)
+        return id == null ? null : userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User with id = " + id + " not found!"));
     }
 

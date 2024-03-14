@@ -15,7 +15,7 @@ public class UserUtils {
 
     public UserUtils(
             UserRepository repository,
-            @Value("${app.user.email}") String testUserEmail
+            @Value("${app.user.email:hexlet@example.com}") String testUserEmail
     ) {
         this.repository = repository;
         this.testUserEmail = testUserEmail;
@@ -52,8 +52,6 @@ public class UserUtils {
     public boolean isCurrentUser(Long id) {
         var currentUserEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         var userEmail = repository.findById(id).map(User::getEmail).orElse(null);
-        System.out.println("currentUserEmail => " + currentUserEmail);
-        System.out.println("userEmail => " + userEmail);
         return currentUserEmail.equals(userEmail);
     }
 

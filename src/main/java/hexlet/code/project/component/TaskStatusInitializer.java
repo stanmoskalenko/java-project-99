@@ -18,7 +18,7 @@ public class TaskStatusInitializer implements ApplicationRunner {
 
     private final TaskStatusRepository repository;
     private final TaskStatusMapper mapper;
-    @Value("${app.task-statuses}")
+    @Value("${app.task-statuses:draft,to_review,to_be_fixed,to_publish,published,feature,bug}")
     private String[] taskStatuses;
 
     /**

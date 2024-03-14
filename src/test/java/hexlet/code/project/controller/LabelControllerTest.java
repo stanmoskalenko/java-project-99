@@ -203,7 +203,7 @@ class LabelControllerTest extends TestUtils {
             var endpoint = SLUG + "/" + testLabel.getId();
             mockMvc.perform(MockMvcRequestBuilders.delete(endpoint)
                             .with(token))
-                    .andExpect(status().isOk());
+                    .andExpect(status().isNoContent());
 
             assertTrue(repository.findById(testLabel.getId()).isEmpty());
         }
