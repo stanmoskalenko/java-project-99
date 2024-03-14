@@ -25,7 +25,7 @@ configurations {
 
 tasks {
     jacocoTestReport {
-        reports.xml.required
+        reports.xml.required = true
     }
     test {
         useJUnitPlatform()
@@ -37,6 +37,9 @@ tasks {
             showFailed = true
             showPassed = true
         }
+    }
+    getByName<Jar>("jar") {
+        enabled = false
     }
 }
 

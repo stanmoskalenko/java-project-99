@@ -26,7 +26,7 @@ RUN gradle clean build \
 
 FROM bellsoft/liberica-openjdk-alpine:17-cds
 LABEL name=test-manager-99
-ENV ARTIFACT_NAME="project-0.0.1-SNAPSHOT.jar"
+ENV ARTIFACT_NAME="app-0.0.1-SNAPSHOT.jar"
 ENV APP_HOME=/usr/app/
 
 WORKDIR /usr/app/
