@@ -21,12 +21,12 @@ class AuthControllerTest extends TestUtils {
     private String getAuthRq(String login, String password) throws JsonProcessingException {
         var acceptor = new AuthAcceptor(login, password);
 
-        return om.writeValueAsString(acceptor);
+        return OM.writeValueAsString(acceptor);
     }
 
     @Test
     void shouldBeOk() throws Exception {
-        var rq = getAuthRq(testUserEmail, testUserPassword);
+        var rq = getAuthRq(TEST_USER_EMAIL, TEST_USER_PASSWORD);
         mockMvc.perform(MockMvcRequestBuilders.post("/api/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(rq))

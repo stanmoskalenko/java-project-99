@@ -23,7 +23,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public abstract class UserMapper {
 
     @Autowired
-    PasswordEncoder passwordEncoder;
+    private PasswordEncoder passwordEncoder;
 
     public abstract UserDto toDto(User entity);
 

@@ -4,8 +4,6 @@ spring:
     name: app
   profiles:
     default: dev
-  datasource:
-    url: ${JDBC_DATABASE_URL:jdbc:h2:mem:dev;DB_CLOSE_DELAY=-1;LOCK_MODE=0}
   jpa:
     generate-ddl: true
     show-sql: true

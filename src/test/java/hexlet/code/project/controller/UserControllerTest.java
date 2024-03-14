@@ -26,13 +26,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class UserControllerTest extends TestUtils {
 
     @Autowired
-    MockMvc mockMvc;
+    private MockMvc mockMvc;
     @Autowired
-    UserRepository repository;
+    private UserRepository repository;
     @Autowired
-    ModelGenerator generator;
+    private ModelGenerator generator;
     @Autowired
-    Faker faker;
+    private Faker faker;
 
     private static final String SLUG = "/api/users";
 
@@ -42,7 +42,7 @@ class UserControllerTest extends TestUtils {
         @Test
         void getListTest() throws Exception {
             var body = mockMvc.perform(MockMvcRequestBuilders.get(SLUG)
-                            .with(token))
+                            .with(getToken()))
                     .andExpect(status().isOk())
                     .andExpect(header().exists("X-Total-Count"))
                     .andReturn()
@@ -69,7 +69,7 @@ class UserControllerTest extends TestUtils {
             var endpoint = SLUG + "/" + testUser.getId();
 
             var body = mockMvc.perform(MockMvcRequestBuilders.get(endpoint)
-                            .with(token))
+                            .with(getToken()))
                     .andExpect(status().isOk())
                     .andReturn()
                     .getResponse()
@@ -106,9 +106,9 @@ class UserControllerTest extends TestUtils {
         void createUserTest() throws Exception {
             var acceptor = getAcceptor();
             var body = mockMvc.perform(MockMvcRequestBuilders.post(SLUG)
-                            .with(token)
+                            .with(getToken())
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content(om.writeValueAsString(acceptor)))
+                            .content(OM.writeValueAsString(acceptor)))
                     .andExpect(status().isCreated())
                     .andReturn()
                     .getResponse()
@@ -128,7 +128,7 @@ class UserControllerTest extends TestUtils {
             var acceptor = getAcceptor();
             mockMvc.perform(MockMvcRequestBuilders.get(SLUG)
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content(om.writeValueAsString(acceptor)))
+                            .content(OM.writeValueAsString(acceptor)))
                     .andExpect(status().isUnauthorized());
         }
     }
@@ -137,7 +137,7 @@ class UserControllerTest extends TestUtils {
     class UpdateUserTest {
 
         private User getUser() {
-            return repository.findByEmail(testUserEmail).get();
+            return repository.findByEmail(TEST_USER_EMAIL).get();
         }
 
         private UpdateUserAcceptor getAcceptor() {
@@ -154,9 +154,9 @@ class UserControllerTest extends TestUtils {
             var userId = getUser().getId();
             var endpoint = SLUG + "/" + userId;
             var body = mockMvc.perform(MockMvcRequestBuilders.put(endpoint)
-                            .with(token)
+                            .with(getToken())
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content(om.writeValueAsString(acceptor)))
+                            .content(OM.writeValueAsString(acceptor)))
                     .andExpect(status().isOk())
                     .andReturn()
                     .getResponse()
@@ -181,7 +181,7 @@ class UserControllerTest extends TestUtils {
             var endpoint = SLUG + "/" + userId;
             mockMvc.perform(MockMvcRequestBuilders.put(endpoint)
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content(om.writeValueAsString(acceptor)))
+                            .content(OM.writeValueAsString(acceptor)))
                     .andExpect(status().isUnauthorized());
         }
 
@@ -193,9 +193,9 @@ class UserControllerTest extends TestUtils {
 
             var endpoint = SLUG + "/" + anotherUser.getId();
             mockMvc.perform(MockMvcRequestBuilders.put(endpoint)
-                            .with(token)
+                            .with(getToken())
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content(om.writeValueAsString(acceptor)))
+                            .content(OM.writeValueAsString(acceptor)))
                     .andExpect(status().isForbidden());
         }
     }
@@ -214,7 +214,7 @@ class UserControllerTest extends TestUtils {
         @Test
         void deleteUserTest() throws Exception {
             var endpoint = SLUG + "/" + testUser.getId();
-            var jwt = genJwt(testUser.getEmail());
+            var jwt = getToken(testUser.getEmail());
 
             mockMvc.perform(MockMvcRequestBuilders.delete(endpoint)
                             .with(jwt))
@@ -237,7 +237,7 @@ class UserControllerTest extends TestUtils {
             var anotherUser = Instancio.of(generator.getUserModel()).create();
             var endpoint = SLUG + "/" + anotherUser.getId();
             mockMvc.perform(MockMvcRequestBuilders.delete(endpoint)
-                            .with(token))
+                            .with(getToken()))
                     .andExpect(status().isForbidden());
         }
     }

@@ -31,11 +31,11 @@ import java.util.List;
 public abstract class TaskMapper {
 
     @Autowired
-    TaskStatusRepository taskStatusRepository;
+    private TaskStatusRepository taskStatusRepository;
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
     @Autowired
-    LabelRepository labelRepository;
+    private LabelRepository labelRepository;
 
     @Mapping(target = "content", source = "description")
     @Mapping(target = "status", source = "status.slug")
@@ -65,7 +65,7 @@ public abstract class TaskMapper {
      * @return the found TaskStatus entity
      * @throws ResourceNotFoundException if no TaskStatus entity with the given slug is found
      */
-    @Named("resolveStatus")
+    @Named(value = "resolveStatus")
     public TaskStatus getStatusByName(String name) {
         return taskStatusRepository.findBySlug(name)
                 .orElseThrow(() -> new ResourceNotFoundException("Task Status = " + name + " not found!"));
@@ -78,7 +78,7 @@ public abstract class TaskMapper {
      * @return the found User entity
      * @throws ResourceNotFoundException if no User entity with the given ID is found
      */
-    @Named("resolveUser")
+    @Named(value = "resolveUser")
     public User getUserById(Long id) {
         return id == null ? null : userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User with id = " + id + " not found!"));
@@ -90,13 +90,9 @@ public abstract class TaskMapper {
      * @param ids the IDs of the Label entities
      * @return the found Label entities, or null if the input list is empty
      */
-    @Named("resolveLabelsByIds")
+    @Named(value = "resolveLabelsByIds")
     public List<Label> getLabelById(List<Long> ids) {
-        if (CollectionUtils.isEmpty(ids)) {
-            return null;
-        }
-
-        return labelRepository.findAllById(ids);
+        return CollectionUtils.isEmpty(ids) ? List.of() : labelRepository.findAllById(ids);
     }
 
     /**
@@ -106,7 +102,7 @@ public abstract class TaskMapper {
      * @return a list of IDs of the given Label entities
      */
     @Named("resolveLabelsByEntity")
-    public List<Long> getLabelIds(List<Label> labels) {
+    public List<Long> getLabelIdsByEntity(List<Label> labels) {
         return labels.stream()
                 .map(Label::getId)
                 .toList();

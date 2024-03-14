@@ -38,19 +38,19 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class TaskControllerTest extends TestUtils {
 
     @Autowired
-    MockMvc mockMvc;
+    private MockMvc mockMvc;
     @Autowired
-    TaskRepository repository;
+    private TaskRepository repository;
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
     @Autowired
-    TaskStatusRepository taskStatusRepository;
+    private TaskStatusRepository taskStatusRepository;
     @Autowired
-    LabelRepository labelRepository;
+    private LabelRepository labelRepository;
     @Autowired
-    ModelGenerator generator;
+    private ModelGenerator generator;
     @Autowired
-    Faker faker;
+    private Faker faker;
 
     private static final String SLUG = "/api/tasks";
     private Task testTask;
@@ -87,7 +87,7 @@ class TaskControllerTest extends TestUtils {
         @Test
         void getListTest() throws Exception {
             var body = mockMvc.perform(MockMvcRequestBuilders.get(SLUG)
-                            .with(token))
+                            .with(getToken()))
                     .andExpect(status().isOk())
                     .andExpect(header().exists("X-Total-Count"))
                     .andReturn()
@@ -107,7 +107,7 @@ class TaskControllerTest extends TestUtils {
                     + "&labelId=" + labelId;
 
             var body = mockMvc.perform(MockMvcRequestBuilders.get(endpoint)
-                            .with(token))
+                            .with(getToken()))
                     .andExpect(status().isOk())
                     .andExpect(header().exists("X-Total-Count"))
                     .andReturn()
@@ -125,7 +125,7 @@ class TaskControllerTest extends TestUtils {
 
             var noMatchEndpoint = SLUG + "?titleCont=create&assigneeId=99999&status=to_be_fixed&labelId=9999";
             var emptyBody = mockMvc.perform(MockMvcRequestBuilders.get(noMatchEndpoint)
-                            .with(token))
+                            .with(getToken()))
                     .andExpect(status().isOk())
                     .andExpect(header().exists("X-Total-Count"))
                     .andReturn()
@@ -152,7 +152,7 @@ class TaskControllerTest extends TestUtils {
             var endpoint = SLUG + "/" + testTask.getId();
 
             var body = mockMvc.perform(MockMvcRequestBuilders.get(endpoint)
-                            .with(token))
+                            .with(getToken()))
                     .andExpect(status().isOk())
                     .andReturn()
                     .getResponse()
@@ -192,9 +192,9 @@ class TaskControllerTest extends TestUtils {
         void createTaskTest() throws Exception {
             var acceptor = getAcceptor();
             var body = mockMvc.perform(MockMvcRequestBuilders.post(SLUG)
-                            .with(token)
+                            .with(getToken())
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content(om.writeValueAsString(acceptor)))
+                            .content(OM.writeValueAsString(acceptor)))
                     .andExpect(status().isCreated())
                     .andReturn()
                     .getResponse()
@@ -209,7 +209,7 @@ class TaskControllerTest extends TestUtils {
                     v -> v.node("content").isEqualTo(acceptor.getContent()),
                     v -> v.node("assignee_id").isEqualTo(acceptor.getAssigneeId()));
 
-            var task = om.readValue(body, Map.class);
+            var task = OM.readValue(body, Map.class);
             repository.deleteById(Long.parseLong(task.get("id").toString()));
         }
 
@@ -218,7 +218,7 @@ class TaskControllerTest extends TestUtils {
             var acceptor = getAcceptor();
             mockMvc.perform(MockMvcRequestBuilders.get(SLUG)
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content(om.writeValueAsString(acceptor)))
+                            .content(OM.writeValueAsString(acceptor)))
                     .andExpect(status().isUnauthorized());
         }
     }
@@ -239,9 +239,9 @@ class TaskControllerTest extends TestUtils {
 
             var endpoint = SLUG + "/" + testTask.getId();
             var body = mockMvc.perform(MockMvcRequestBuilders.put(endpoint)
-                            .with(token)
+                            .with(getToken())
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content(om.writeValueAsString(acceptor)))
+                            .content(OM.writeValueAsString(acceptor)))
                     .andExpect(status().isOk())
                     .andReturn()
                     .getResponse()
@@ -263,7 +263,7 @@ class TaskControllerTest extends TestUtils {
             var endpoint = SLUG + "/" + testTask.getId();
             mockMvc.perform(MockMvcRequestBuilders.get(endpoint)
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content(om.writeValueAsString(acceptor)))
+                            .content(OM.writeValueAsString(acceptor)))
                     .andExpect(status().isUnauthorized());
         }
     }
@@ -275,7 +275,7 @@ class TaskControllerTest extends TestUtils {
         void deleteTaskTest() throws Exception {
             var endpoint = SLUG + "/" + testTask.getId();
             mockMvc.perform(MockMvcRequestBuilders.delete(endpoint)
-                            .with(token))
+                            .with(getToken()))
                     .andExpect(status().isNoContent());
 
             assertTrue(repository.findById(testTask.getId()).isEmpty());
@@ -295,7 +295,7 @@ class TaskControllerTest extends TestUtils {
         void deleteTaskStatusTest() throws Exception {
             var endpoint = "/api/task_statuses/" + testStatus.getId();
             var body = mockMvc.perform(MockMvcRequestBuilders.delete(endpoint)
-                            .with(token))
+                            .with(getToken()))
                     .andExpect(status().isBadRequest())
                     .andReturn()
                     .getResponse()
@@ -309,7 +309,7 @@ class TaskControllerTest extends TestUtils {
         void deleteLabelTest() throws Exception {
             var endpoint = "/api/labels/" + testLabel.getId();
             var body = mockMvc.perform(MockMvcRequestBuilders.delete(endpoint)
-                            .with(token))
+                            .with(getToken()))
                     .andExpect(status().isBadRequest())
                     .andReturn()
                     .getResponse()

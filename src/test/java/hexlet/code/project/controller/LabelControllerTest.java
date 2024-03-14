@@ -26,13 +26,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class LabelControllerTest extends TestUtils {
 
     @Autowired
-    MockMvc mockMvc;
+    private MockMvc mockMvc;
     @Autowired
-    LabelRepository repository;
+    private LabelRepository repository;
     @Autowired
-    ModelGenerator generator;
+    private ModelGenerator generator;
     @Autowired
-    Faker faker;
+    private Faker faker;
 
     private static final String SLUG = "/api/labels";
 
@@ -45,7 +45,7 @@ class LabelControllerTest extends TestUtils {
             repository.save(testLabel);
 
             var body = mockMvc.perform(MockMvcRequestBuilders.get(SLUG)
-                            .with(token))
+                            .with(getToken()))
                     .andExpect(status().isOk())
                     .andExpect(header().exists("X-Total-Count"))
                     .andReturn()
@@ -72,7 +72,7 @@ class LabelControllerTest extends TestUtils {
             var endpoint = SLUG + "/" + testLabel.getId();
 
             var body = mockMvc.perform(MockMvcRequestBuilders.get(endpoint)
-                            .with(token))
+                            .with(getToken()))
                     .andExpect(status().isOk())
                     .andReturn()
                     .getResponse()
@@ -93,7 +93,7 @@ class LabelControllerTest extends TestUtils {
         @Test
         void getNonExistentUserWithoutTokenTest() throws Exception {
             mockMvc.perform(MockMvcRequestBuilders.get("/api/task_statuses/9999")
-                            .with(token))
+                            .with(getToken()))
                     .andExpect(status().isNotFound());
         }
     }
@@ -112,9 +112,9 @@ class LabelControllerTest extends TestUtils {
         void createLabelTest() throws Exception {
             var acceptor = getAcceptor();
             var body = mockMvc.perform(MockMvcRequestBuilders.post(SLUG)
-                            .with(token)
+                            .with(getToken())
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content(om.writeValueAsString(acceptor)))
+                            .content(OM.writeValueAsString(acceptor)))
                     .andExpect(status().isCreated())
                     .andReturn()
                     .getResponse()
@@ -131,7 +131,7 @@ class LabelControllerTest extends TestUtils {
             var acceptor = getAcceptor();
             mockMvc.perform(MockMvcRequestBuilders.get(SLUG)
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content(om.writeValueAsString(acceptor)))
+                            .content(OM.writeValueAsString(acceptor)))
                     .andExpect(status().isUnauthorized());
         }
     }
@@ -160,9 +160,9 @@ class LabelControllerTest extends TestUtils {
 
             var endpoint = SLUG + "/" + testLabel.getId();
             var body = mockMvc.perform(MockMvcRequestBuilders.put(endpoint)
-                            .with(token)
+                            .with(getToken())
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content(om.writeValueAsString(acceptor)))
+                            .content(OM.writeValueAsString(acceptor)))
                     .andExpect(status().isOk())
                     .andReturn()
                     .getResponse()
@@ -182,7 +182,7 @@ class LabelControllerTest extends TestUtils {
             var endpoint = SLUG + "/" + testLabel.getId();
             mockMvc.perform(MockMvcRequestBuilders.get(endpoint)
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content(om.writeValueAsString(acceptor)))
+                            .content(OM.writeValueAsString(acceptor)))
                     .andExpect(status().isUnauthorized());
         }
     }
@@ -202,7 +202,7 @@ class LabelControllerTest extends TestUtils {
         void deleteLabelTest() throws Exception {
             var endpoint = SLUG + "/" + testLabel.getId();
             mockMvc.perform(MockMvcRequestBuilders.delete(endpoint)
-                            .with(token))
+                            .with(getToken()))
                     .andExpect(status().isNoContent());
 
             assertTrue(repository.findById(testLabel.getId()).isEmpty());
