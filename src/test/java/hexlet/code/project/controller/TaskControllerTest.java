@@ -237,7 +237,6 @@ class TaskControllerTest extends TestUtils {
         private UpdateTaskAcceptor getAcceptor() {
             var acceptor = new UpdateTaskAcceptor();
             acceptor.setTitle(faker.internet().domainName());
-            acceptor.setStatus(testTask.getStatus().getSlug());
             acceptor.setContent(testTask.getDescription());
             acceptor.setAssigneeId(testTask.getAssignee().getId());
             acceptor.setIndex(testTask.getIndex());
