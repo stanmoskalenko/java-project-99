@@ -51,10 +51,10 @@ public abstract class TaskMapper {
     public abstract Task toCreateEntity(CreateTaskAcceptor acceptor);
 
     @Mapping(target = "description", source = "content")
-    @Mapping(target = "name", source = "title"
-            , nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    @Mapping(target = "status", source = "status", qualifiedByName = "resolveStatus"
-            , nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @Mapping(target = "name", source = "title",
+            nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @Mapping(target = "status", source = "status", qualifiedByName = "resolveStatus",
+            nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "assignee", source = "assigneeId", qualifiedByName = "resolveUser")
     @Mapping(target = "labels", source = "taskLabelIds", qualifiedByName = "resolveLabelsByIds")
     public abstract Task toUpdateEntity(UpdateTaskAcceptor acceptor, @MappingTarget Task task);
