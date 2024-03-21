@@ -16,6 +16,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.Named;
+import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.ReportingPolicy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
@@ -50,8 +51,10 @@ public abstract class TaskMapper {
     public abstract Task toCreateEntity(CreateTaskAcceptor acceptor);
 
     @Mapping(target = "description", source = "content")
-    @Mapping(target = "name", source = "title")
-    @Mapping(target = "status", source = "status", qualifiedByName = "resolveStatus")
+    @Mapping(target = "name", source = "title"
+            , nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @Mapping(target = "status", source = "status", qualifiedByName = "resolveStatus"
+            , nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "assignee", source = "assigneeId", qualifiedByName = "resolveUser")
     @Mapping(target = "labels", source = "taskLabelIds", qualifiedByName = "resolveLabelsByIds")
     public abstract Task toUpdateEntity(UpdateTaskAcceptor acceptor, @MappingTarget Task task);
