@@ -151,7 +151,6 @@ class TaskControllerTest extends TestUtils {
         @Test
         void getUserTest() throws Exception {
             var endpoint = SLUG + "/" + testTask.getId();
-
             var body = mockMvc.perform(MockMvcRequestBuilders.get(endpoint)
                             .with(getToken()))
                     .andExpect(status().isOk())
@@ -238,6 +237,11 @@ class TaskControllerTest extends TestUtils {
         private UpdateTaskAcceptor getAcceptor() {
             var acceptor = new UpdateTaskAcceptor();
             acceptor.setTitle(faker.internet().domainName());
+            acceptor.setStatus(testTask.getStatus().getSlug());
+            acceptor.setContent(testTask.getDescription());
+            acceptor.setAssigneeId(testTask.getAssignee().getId());
+            acceptor.setIndex(testTask.getIndex());
+            acceptor.setTaskLabelIds(testTask.getLabels().stream().map(Label::getId).toList());
 
             return acceptor;
         }
@@ -245,7 +249,6 @@ class TaskControllerTest extends TestUtils {
         @Test
         void updateTaskTest() throws Exception {
             var acceptor = getAcceptor();
-
             var endpoint = SLUG + "/" + testTask.getId();
             var body = mockMvc.perform(MockMvcRequestBuilders.put(endpoint)
                             .with(getToken())

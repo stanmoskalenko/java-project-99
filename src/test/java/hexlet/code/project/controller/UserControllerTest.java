@@ -200,6 +200,7 @@ class UserControllerTest extends TestUtils {
         @Test
         void updateAnotherUserTest() throws Exception {
             var anotherUser = Instancio.of(generator.getUserModel()).create();
+            repository.save(anotherUser);
             var acceptor = new UpdateUserAcceptor();
             acceptor.setFirstName(faker.name().firstName());
 
@@ -247,6 +248,7 @@ class UserControllerTest extends TestUtils {
         @Test
         void deleteAnotherUserTest() throws Exception {
             var anotherUser = Instancio.of(generator.getUserModel()).create();
+            repository.save(anotherUser);
             var endpoint = SLUG + "/" + anotherUser.getId();
             mockMvc.perform(MockMvcRequestBuilders.delete(endpoint)
                             .with(getToken()))
