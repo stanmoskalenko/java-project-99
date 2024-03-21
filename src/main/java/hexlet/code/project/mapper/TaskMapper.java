@@ -104,8 +104,7 @@ public abstract class TaskMapper {
      */
     @Named("resolveLabelsByEntity")
     public List<Long> getLabelIdsByEntity(List<Label> labels) {
-        return labels.stream()
-                .map(Label::getId)
-                .toList();
+        return labels == null ? null : labels.stream().map(Label::getId).toList();
     }
+
 }
