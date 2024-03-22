@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.openapitools.jackson.nullable.JsonNullable;
 
 import java.util.List;
 
@@ -19,6 +20,6 @@ public class UpdateTaskAcceptor extends BaseTaskAcceptor {
     @Size(min = MIN_LEN, message = "Name must be at least 1 character long!")
     private String title;
     private String status;
-    private List<Long> taskLabelIds;
+    private JsonNullable<List<Long>> taskLabelIds;
 
 }

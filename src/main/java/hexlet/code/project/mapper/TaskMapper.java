@@ -24,7 +24,9 @@ import org.springframework.util.CollectionUtils;
 import java.util.List;
 
 @Mapper(
+        uses = JsonNullableMapper.class,
         componentModel = MappingConstants.ComponentModel.SPRING,
+        nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
         unmappedTargetPolicy = ReportingPolicy.IGNORE
 )
 public abstract class TaskMapper {
@@ -51,10 +53,8 @@ public abstract class TaskMapper {
     public abstract Task toCreateEntity(CreateTaskAcceptor acceptor);
 
     @Mapping(target = "description", source = "content")
-    @Mapping(target = "name", source = "title",
-            nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    @Mapping(target = "status", source = "status", qualifiedByName = "resolveStatus",
-            nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @Mapping(target = "name", source = "title")
+    @Mapping(target = "status", source = "status", qualifiedByName = "resolveStatus")
     @Mapping(target = "assignee", source = "assigneeId", qualifiedByName = "resolveUser")
     @Mapping(target = "labels", source = "taskLabelIds", qualifiedByName = "resolveLabelsByIds")
     public abstract Task toUpdateEntity(UpdateTaskAcceptor acceptor, @MappingTarget Task task);
@@ -93,7 +93,7 @@ public abstract class TaskMapper {
      */
     @Named(value = "resolveLabelsByIds")
     public List<Label> getLabelById(List<Long> ids) {
-        return CollectionUtils.isEmpty(ids) ? null : labelRepository.findAllById(ids);
+        return CollectionUtils.isEmpty(ids) ? List.of() : labelRepository.findAllById(ids);
     }
 
     /**

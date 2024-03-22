@@ -19,6 +19,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.openapitools.jackson.nullable.JsonNullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
@@ -182,8 +183,8 @@ class TaskControllerTest extends TestUtils {
             var acceptor = new CreateTaskAcceptor();
             acceptor.setTitle(faker.internet().domainName());
             acceptor.setStatus(testStatus.getSlug());
-            acceptor.setAssigneeId(testUser.getId());
-            acceptor.setContent(faker.elderScrolls().city());
+            acceptor.setAssigneeId(JsonNullable.of(testUser.getId()));
+            acceptor.setContent(JsonNullable.of(faker.elderScrolls().city()));
             acceptor.setTaskLabelIds(List.of(testLabel.getId()));
             return acceptor;
         }
@@ -204,9 +205,9 @@ class TaskControllerTest extends TestUtils {
 
             assertNotNull(actual.getCreatedAt());
             assertEquals(acceptor.getTitle(), actual.getName());
-            assertEquals(acceptor.getContent(), actual.getDescription());
+            assertEquals(acceptor.getContent().get(), actual.getDescription());
             assertEquals(acceptor.getStatus(), actual.getStatus().getSlug());
-            assertEquals(acceptor.getAssigneeId(), actual.getAssignee().getId());
+            assertEquals(acceptor.getAssigneeId().get(), actual.getAssignee().getId());
 
             assertThatJson(body).and(
                     v -> v.node("id").isNotNull(),
@@ -237,10 +238,6 @@ class TaskControllerTest extends TestUtils {
         private UpdateTaskAcceptor getAcceptor() {
             var acceptor = new UpdateTaskAcceptor();
             acceptor.setTitle(faker.internet().domainName());
-            acceptor.setContent(testTask.getDescription());
-            acceptor.setAssigneeId(testTask.getAssignee().getId());
-            acceptor.setIndex(testTask.getIndex());
-            acceptor.setTaskLabelIds(testTask.getLabels().stream().map(Label::getId).toList());
 
             return acceptor;
         }

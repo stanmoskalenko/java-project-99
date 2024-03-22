@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.openapitools.jackson.nullable.JsonNullable;
 
 import java.io.Serializable;
 
@@ -17,8 +18,8 @@ public class BaseTaskAcceptor implements Serializable {
     protected static final int MIN_LEN = 1;
 
     private Long index;
-    private String content;
+    private JsonNullable<String> content;
     @JsonProperty("assignee_id")
-    private Long assigneeId;
+    private JsonNullable<Long> assigneeId;
 
 }

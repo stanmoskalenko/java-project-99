@@ -1,8 +1,10 @@
 package hexlet.code.project.utils;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hexlet.code.project.config.TestConfig;
 import lombok.Getter;
+import org.openapitools.jackson.nullable.JsonNullableModule;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
@@ -18,7 +20,9 @@ public class TestUtils {
 
     public static final String TEST_USER_PASSWORD = "qwerty";
 
-    public static final ObjectMapper OM = new ObjectMapper();
+    public static final ObjectMapper OM = new ObjectMapper()
+            .setSerializationInclusion(JsonInclude.Include.NON_NULL)
+            .registerModule(new JsonNullableModule());
 
     protected static SecurityMockMvcRequestPostProcessors.JwtRequestPostProcessor getToken(String email) {
         return jwt().jwt(builder -> builder.subject(email));
